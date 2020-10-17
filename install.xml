@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <singlepages>
+        <page name="Brand Central" path="/dashboard/system/brand_central"
+              filename="/dashboard/system/brand_central.php"
+              package="brand_central_connector"/>
+        <page name="Settings" path="/dashboard/system/brand_central/settings"
+              filename="/dashboard/system/brand_central/settings.php"
+              package="brand_central_connector"/>
+    </singlepages>
+</concrete5-cif>
