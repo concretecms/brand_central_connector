@@ -7,9 +7,9 @@
                 jQuery.fn.dialog.open({
                     title: data.externalFileProviderName,
                     href: CCM_DISPATCHER_FILENAME + "/ccm/brand_central_connector/select_asset_file/" + data.externalFileProviderId + "/" + data.selectedFile.fID,
-                    width: 550,
+                    width: '80%',
                     modal: true,
-                    height: 450,
+                    height: '80%',
                     onOpen: function () {
                         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function (e, data) {
                             ConcreteEvent.publish('FileManagerSelectFile', {

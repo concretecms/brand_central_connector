@@ -54,6 +54,10 @@ class Controller extends Package
 
     public function on_start()
     {
+        if (file_exists($this->getPackagePath() . "/vendor/autoload.php")) {
+            require_once($this->getPackagePath() . "/vendor/autoload.php");
+        }
+
         /** @var ServiceProvider $serviceProvider */
         $serviceProvider = $this->app->make(ServiceProvider::class);
         $serviceProvider->register();

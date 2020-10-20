@@ -37,9 +37,10 @@ $token = $app->make(Token::class);
     <div class="row">
         <div class="col-md-6">
             <img src="<?php echo h($assetDetails->getThumbnailUrl()); ?>"
-                 alt="<?php echo h($assetDetails->getTitle()); ?>">
+                 alt="<?php echo h($assetDetails->getTitle()); ?>"
+                 class="ccm-asset-thumbnail">
 
-            <h3>
+            <h3 class="ccm-asset-files-title">
                 <?php echo t("Choose File Type"); ?>
             </h3>
 
@@ -75,3 +76,16 @@ $token = $app->make(Token::class);
         </button>
     </div>
 </form>
+
+<style>
+    .ccm-asset-thumbnail {
+        width: 100%;
+        height: auto;
+        margin-bottom: 25px;
+    }
+
+    .ccm-asset-files-title {
+        font-size: 1em;
+        font-weight: bold;
+    }
+</style>
