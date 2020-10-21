@@ -85,7 +85,7 @@ $token = $app->make(Token::class);
     }
 
     .ccm-asset-files-title {
-        font-size: 1em;
-        font-weight: bold;
+        font-size: 1em !important;
+        font-weight: bold !important;
     }
 </style>
