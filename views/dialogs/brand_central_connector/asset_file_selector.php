@@ -39,6 +39,20 @@ $token = $app->make(Token::class);
             <img src="<?php echo h($assetDetails->getThumbnailUrl()); ?>"
                  alt="<?php echo h($assetDetails->getTitle()); ?>"
                  class="ccm-asset-thumbnail">
+        </div>
+
+        <div class="col-md-6">
+            <h3>
+                <?php echo t("Description"); ?>
+            </h3>
+
+            <?php if ($assetDetails->getDescription()) { ?>
+                <p>
+                    <?php echo nl2br(h($assetDetails->getDescription())); ?>
+                </p>
+            <?php } else { ?>
+                <p><?=t('None')?></p>
+            <?php } ?>
 
             <h3 class="ccm-asset-files-title">
                 <?php echo t("Choose File Type"); ?>
@@ -53,16 +67,7 @@ $token = $app->make(Token::class);
                     <?php $i++; ?>
                 </div>
             <?php } ?>
-        </div>
 
-        <div class="col-md-6">
-            <h3>
-                <?php echo t("Description"); ?>
-            </h3>
-
-            <p>
-                <?php echo nl2br(strip_tags($assetDetails->getDescription())); ?>
-            </p>
         </div>
     </div>
 
