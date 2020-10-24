@@ -9,13 +9,6 @@
       "Concrete5\\BrandCentralConnector\\": "src"
     }
   },
-  "replace": {
-    "guzzlehttp/guzzle": "*",
-    "guzzlehttp/promises": "*",
-    "ralouphie/getallheaders": "*",
-    "guzzlehttp/psr7": "*",
-    "psr/http-message": "*"
-  },
   "require": {
     "kamermans/guzzle-oauth2-subscriber": "^1.0"
   }
