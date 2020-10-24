@@ -205,6 +205,8 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
             $file->setFileFolder($destFolder);
             /** @noinspection PhpUndefinedMethodInspection */
             $file->getFileNodeObject()->move($destFolder);
+
+            $file->setAttribute("brand_central_asset_file_id", $data["assetId"]);
         }
 
         return $fileVersion;
