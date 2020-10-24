@@ -13,7 +13,7 @@ use Concrete5\BrandCentralConnector\ServiceProvider;
 class Controller extends Package
 {
     protected $appVersionRequired = '9.0.0a3';
-    protected $pkgVersion = '0.1.4';
+    protected $pkgVersion = '0.1.6';
     protected $pkgHandle = 'brand_central_connector';
     protected $pkgDescription = '';
     protected $pkgAutoloaderRegistries = ['src' => 'Concrete5\BrandCentralConnector'];
@@ -52,7 +52,7 @@ class Controller extends Package
             $createdFolder = $filesystem->addFolder($rootFolder, $folderName);
             /** @var Repository $config */
             $config = $this->app->make(Repository::class);
-            $config->save("brand_central_connector.target_upload_directory_id", $createdFolder->getTreeNodeID());
+            $config->save("concrete.external_file_providers.preferred_upload_directory_id", $createdFolder->getTreeNodeID());
         }
 
         //Add File Attribute
