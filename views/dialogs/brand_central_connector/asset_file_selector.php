@@ -10,6 +10,7 @@ use Concrete5\BrandCentralConnector\AssetDetails;
 
 /** @var int $assetId */
 /** @var int $externalFileProviderId */
+/** @var int $externalFileProviderUploadDirectoryId */
 /** @var AssetDetails $assetDetails */
 
 $app = Application::getFacadeApplication();
@@ -25,6 +26,8 @@ $token = $app->make(Token::class);
     <?php echo $token->output('select_asset_file'); ?>
 
     <?php echo $form->hidden('externalFileProviderId', $externalFileProviderId); ?>
+
+    <?php echo $form->hidden('externalFileProviderUploadDirectoryId', $externalFileProviderUploadDirectoryId); ?>
 
     <div class="row">
         <div class="col-sm-12">

@@ -6,7 +6,7 @@
             if (data.externalFileProviderTypeHandle === "brand_central") {
                 jQuery.fn.dialog.open({
                     title: data.externalFileProviderName,
-                    href: CCM_DISPATCHER_FILENAME + "/ccm/brand_central_connector/select_asset_file/" + data.externalFileProviderId + "/" + data.selectedFile.fID,
+                    href: CCM_DISPATCHER_FILENAME + "/ccm/brand_central_connector/select_asset_file/" + data.externalFileProviderId + "/" + data.selectedFile.fID + "?externalFileProviderUploadDirectoryId=" + encodeURI(data.externalFileProviderUploadDirectoryId),
                     width: '80%',
                     modal: true,
                     height: '80%',

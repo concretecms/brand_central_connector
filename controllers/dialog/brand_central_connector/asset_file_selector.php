@@ -29,8 +29,13 @@ class AssetFileSelector extends UserInterface
     {
         /** @var ExternalFileProviderFactory $externalFileProviderFactory */
         $externalFileProviderFactory = $this->app->make(ExternalFileProviderFactory::class);
-
         $externalFileProvider = $externalFileProviderFactory->fetchByID((int)$externalFileProviderId);
+
+        if ($this->request->query->has ("externalFileProviderUploadDirectoryId")) {
+            $externalFileProviderUploadDirectoryId = $this->request->query->get("externalFileProviderUploadDirectoryId");
+        } else {
+            throw new Exception(t("You need to submit a valid upload directory id."));
+        }
 
         if ($externalFileProvider instanceof ExternalFileProvider) {
             /** @var BrandCentralConfiguration $config */
@@ -39,6 +44,7 @@ class AssetFileSelector extends UserInterface
             $assetDetails = $config->getAssetDetails($assetId);
 
             $this->set('externalFileProviderId', (int)$externalFileProviderId);
+            $this->set('externalFileProviderUploadDirectoryId', (int)$externalFileProviderUploadDirectoryId);
             $this->set('assetDetails', $assetDetails);
         } else {
             throw new Exception(t("The given external file provider doesn't exists."));
@@ -61,6 +67,7 @@ class AssetFileSelector extends UserInterface
 
         $formValidator->addRequiredToken("select_asset_file");
         $formValidator->addRequired("externalFileProviderId");
+        $formValidator->addRequired("externalFileProviderUploadDirectoryId");
         $formValidator->addRequired("remoteFileId");
 
         if ($formValidator->test()) {
@@ -73,7 +80,10 @@ class AssetFileSelector extends UserInterface
                 try {
                     /** @var BrandCentralConfiguration $config */
                     $config = $externalFileProvider->getConfigurationObject();
-                    $importedFile = $config->importFile((int)$this->request->request->get("remoteFileId"));
+                    $importedFile = $config->importFile(
+                        (int)$this->request->request->get("remoteFileId"),
+                        (int)$this->request->request->get("externalFileProviderUploadDirectoryId")
+                    );
 
                     if ($importedFile instanceof Version) {
                         $response->setAdditionalDataAttribute("importedFileId", $importedFile->getFileID());

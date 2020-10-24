@@ -5,6 +5,7 @@ namespace Concrete5\BrandCentralConnector\File\ExternalFileProvider\Configuratio
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileEntry;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileList;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Form\Service\Validation;
@@ -160,10 +161,11 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
 
     /**
      * @param $fileId
+     * @param $uploadDirectoryId
      * @return Version|null
      * @throws Exception
      */
-    public function importFile($fileId)
+    public function importFile($fileId, $uploadDirectoryId)
     {
         $data = $this->doRequest("/public_api/v1/assets/get_file/" . $fileId);
 
@@ -185,29 +187,7 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
                 throw new Exception(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $downloadUrl, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
             }
 
-            $matches = null;
-            $filename = null;
-
-            if (preg_match('/^[^#?]+[\\/]([-\w%]+\.[-\w%]+)($|\?|#)/', $downloadUrl, $matches)) {
-                // got a filename (with extension)... use it
-                $filename = $matches[1];
-            } else {
-                foreach ($response->getHeader('Content-Type') as $contentType) {
-                    if (!empty($contentType)) {
-                        list($mimeType) = explode(';', $contentType, 2);
-                        $mimeType = trim($mimeType);
-                        $extension = $app->make('helper/mime')->mimeToExtension($mimeType);
-
-                        if ($extension === false) {
-                            throw new Exception(t('Unknown mime-type: %s', h($mimeType)));
-                        }
-
-                        $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
-                    } else {
-                        throw new Exception(t(/*i18n: %s is an URL*/ 'Could not determine the name of the file at %s', $downloadUrl));
-                    }
-                }
-            }
+            $filename = $data["originalFileName"];
 
             $fullFilename = $volatileDirectory->getPath() . '/' . $filename;
             // write the downloaded file to a temporary location on disk
@@ -216,6 +196,15 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
             fclose($handle);
 
             $fileVersion = $fi->importLocalFile($fullFilename);
+
+            $file = $fileVersion->getFile();
+            $fileSystem = new Filesystem();
+            $destFolder = $fileSystem->getFolder($uploadDirectoryId);
+
+            // move the file to the selected destination folder
+            $file->setFileFolder($destFolder);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $file->getFileNodeObject()->move($destFolder);
         }
 
         return $fileVersion;
