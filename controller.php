@@ -2,15 +2,18 @@
 
 namespace Concrete\Package\BrandCentralConnector;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\ExternalFileProvider\Type\Type;
+use Concrete\Core\File\Filesystem;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Package\PackageService;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete5\BrandCentralConnector\ServiceProvider;
 
 class Controller extends Package
 {
     protected $appVersionRequired = '9.0.0a3';
-    protected $pkgVersion = '0.1.2';
+    protected $pkgVersion = '0.1.6';
     protected $pkgHandle = 'brand_central_connector';
     protected $pkgDescription = '';
     protected $pkgAutoloaderRegistries = ['src' => 'Concrete5\BrandCentralConnector'];
@@ -38,6 +41,22 @@ class Controller extends Package
         if (!$externalFileProvider instanceof Type) {
             Type::add('brand_central', t('Brand Central'), $pkg);
         }
+
+        // Create BrandCentral folder
+        $filesystem = new Filesystem();
+        $folderName = t("BrandCentral");
+        $rootFolder = $filesystem->getRootFolder();
+        $folder = FileFolder::getNodeByName($folderName);
+
+        if (!$folder instanceof FileFolder) {
+            $createdFolder = $filesystem->addFolder($rootFolder, $folderName);
+            /** @var Repository $config */
+            $config = $this->app->make(Repository::class);
+            $config->save("concrete.external_file_providers.preferred_upload_directory_id", $createdFolder->getTreeNodeID());
+        }
+
+        //Add File Attribute
+        $this->installContentFile("install.xml");
     }
 
     public function upgrade()
