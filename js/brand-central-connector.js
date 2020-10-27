@@ -9,7 +9,7 @@
                     href: CCM_DISPATCHER_FILENAME + "/ccm/brand_central_connector/select_asset_file/" + data.externalFileProviderId + "/" + data.selectedFile.fID + "?externalFileProviderUploadDirectoryId=" + encodeURI(data.externalFileProviderUploadDirectoryId),
                     width: '80%',
                     modal: true,
-                    height: '80%',
+                    height: '500',
                     onOpen: function () {
                         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function (e, data) {
                             ConcreteEvent.publish('FileManagerSelectFile', {
