@@ -5,6 +5,7 @@ namespace Concrete5\BrandCentralConnector\File\ExternalFileProvider\Configuratio
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileEntry;
 use Concrete\Core\File\ExternalFileProvider\ExternalFileList;
+use Concrete\Core\File\ExternalFileProvider\ExternalSearchRequest;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Service\VolatileDirectory;
@@ -213,22 +214,25 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
     }
 
     /**
-     * @param string $keyword
-     * @param string $selectedFileType
+     * @param ExternalSearchRequest $externalSearchRequest
      * @return ExternalFileList
      * @throws Exception
      */
-    public function searchFiles($keyword, $selectedFileType)
+    public function searchFiles($externalSearchRequest)
     {
         $externalFileList = new ExternalFileList();
 
         $results = $this->doRequest("/public_api/v1/assets/search", [
-            "keywords" => $keyword,
-            "fileType" => $selectedFileType
+            "keywords" => $externalSearchRequest->getSearchTerm(),
+            "fileType" => $externalSearchRequest->getFileType(),
+            "orderBy" => $externalSearchRequest->getOrderBy(),
+            "orderByDirection" => $externalSearchRequest->getOrderByDirection(),
+            "ccm_paging_p" => $externalSearchRequest->getCurrentPage(),
+            "ipp" => $externalSearchRequest->getItemsPerPage()
         ]);
 
-        if (is_array($results)) {
-            foreach ($results as $result) {
+        if (is_array($results) && is_array($results["assets"])) {
+            foreach ($results["assets"] as $result) {
                 $tempFile = new ExternalFileEntry();
                 $tempFile->setFID($result["id"]);
                 $tempFile->setThumbnailUrl($result["thumbnail"]);
@@ -236,6 +240,8 @@ class BrandCentralConfiguration extends Configuration implements ConfigurationIn
 
                 $externalFileList->addFile($tempFile);
             }
+
+            $externalFileList->setTotalFiles($results["total"]);
         }
 
         return $externalFileList;
