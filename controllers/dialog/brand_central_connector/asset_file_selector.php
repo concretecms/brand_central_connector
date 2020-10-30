@@ -118,7 +118,7 @@ class AssetFileSelector extends UserInterface
         $permissionChecker = new Checker($folder);
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $permissionChecker->getResponseObject()->validate("add_files");
+        return $permissionChecker->getResponseObject()->validate("add_file");
     }
 
 }
